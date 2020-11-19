@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <UserSecretsId>a6def86f-3ae4-457e-82c7-b76b1020db1d</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.14.0-beta2" />
+    <PackageReference Include="Microsoft.ApplicationInsights.TraceListener" Version="2.14.0-beta2" />
+    <PackageReference Include="Microsoft.Extensions.Logging.ApplicationInsights" Version="2.14.0-beta2" />
+    <PackageReference Include="Seq.Extensions.Logging" Version="5.0.0-dev-00067" />
+  </ItemGroup>
+
+</Project>
