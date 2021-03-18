@@ -44,11 +44,13 @@ namespace LeaderboardWebAPI
                 })
                 .ConfigureLogging((context, builder) =>
                 {
-                    builder.AddApplicationInsights(options =>
-                    {
-                        options.IncludeScopes = true;
-                        options.TrackExceptionsAsExceptionTelemetry = true;
-                    });
+                    builder.AddApplicationInsights(
+                        context.Configuration["ApplicationInsights:InstrumentationKey"],
+                        options =>
+                        {
+                            options.IncludeScopes = true;
+                            options.TrackExceptionsAsExceptionTelemetry = true;
+                        });
                     builder.AddSeq("http://seq:5341");
                     builder.AddSimpleConsole(options => {
                         // New in .NET 5

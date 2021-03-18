@@ -59,11 +59,11 @@ namespace GamingWebApp.Pages
             }
             catch (HttpRequestException ex)
             {
-                logger.LogWarning(ex, "Http request failed.");
+                logger.LogInformation(ex, "Http request failed.");
             }
             catch (TimeoutRejectedException ex)
             {
-                logger.LogWarning(ex, "Timeout occurred when retrieving high score list.");
+                logger.LogDebug(ex, "Timeout occurred when retrieving high score list.");
             }
             catch (Exception ex)
             {

@@ -41,6 +41,8 @@ namespace LeaderboardWebAPI.Controllers
         [ProducesResponseType(typeof(IEnumerable<HighScore>), 200)]
         public async Task<ActionResult<IEnumerable<HighScore>>> Get(int limit = 10)
         {
+            logger?.LogError("Retrieving score list with a limit of {SearchLimit}.", limit);
+            logger?.LogWarning("Retrieving score list with a limit of {SearchLimit}.", limit);
             logger?.LogInformation("Retrieving score list with a limit of {SearchLimit}.", limit);
             AnalyzeLimit(limit);
 

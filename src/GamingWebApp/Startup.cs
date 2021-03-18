@@ -7,6 +7,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Polly;
+using Polly.Extensions.Http;
+using Polly.Retry;
+using Polly.Timeout;
 using Refit;
 using System;
 using System.Collections.Generic;
@@ -52,17 +55,21 @@ namespace GamingWebApp
 
         private void ConfigureTypedClients(IServiceCollection services)
         {
+            var timeout = Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromMilliseconds(1500));
+            var retry = HttpPolicyExtensions
+                .HandleTransientHttpError()
+                .Or<TimeoutRejectedException>()
+                .RetryAsync(3, onRetry: (exception, retryCount) => { 
+                    Trace.TraceInformation($"Retry #{retryCount}"); 
+                });
+
             services.AddHttpClient("WebAPIs", options =>
             {
                 options.BaseAddress = new Uri(Configuration["LeaderboardApiOptions:BaseUrl"]);
                 options.Timeout = TimeSpan.FromMilliseconds(15000);
                 options.DefaultRequestHeaders.Add("ClientFactory", "Check");
             })
-            .AddPolicyHandler(Policy.TimeoutAsync<HttpResponseMessage>(TimeSpan.FromMilliseconds(1500)))
-            .AddTransientHttpErrorPolicy(p => p.RetryAsync(3, onRetry: (exception, retryCount) => {
-                Trace.TraceInformation($"Retry #{retryCount}");
-            }))
-            .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)))
+            .AddPolicyHandler(retry.WrapAsync(timeout))
             .AddTypedClient(client => RestService.For<ILeaderboardClient>(client));
         }
 
