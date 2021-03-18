@@ -1,0 +1,75 @@
+version: '3.4'
+
+services:
+  leaderboardwebapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80;http://+:8080
+      - ASPNETCORE_MANAGEMENTPORT=8080
+      - ConnectionStrings__LeaderboardContext=Server=sql.retrogaming.internal;Database=Leaderboard;User Id=sa;Password=Pass@word;Trusted_Connection=False
+      - KeyVaultName=https://yourkeyvault.vault.azure.net/
+    ports:
+      - "4972:80"
+      - "44369:443"
+    depends_on:
+      - sql.data
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - frontend
+      - backend
+
+  gamingwebapp:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - LeaderboardApiOptions__BaseUrl=http://leaderboardwebapi
+    ports:
+      - "5618:80"
+      - "44325:443"
+    depends_on:
+      - leaderboardwebapi
+    volumes:
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+    networks:
+      - frontend
+
+  sql.data:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      - SA_PASSWORD=Pass@word
+      - MSSQL_PID=Developer
+      - ACCEPT_EULA=Y
+    ports:
+      - "1433"
+    networks:
+      backend:
+        aliases: 
+          - sql.retrogaming.internal
+
+  seq:
+    image: datalust/seq:latest
+    environment: 
+      - ACCEPT_EULA=Y
+    ports:
+      - 5341:80
+    networks:
+      - backend
+
+  healthcheckui:
+    image: xabarilcoding/healthchecksui:latest
+    environment:
+      - HealthChecksUI:HealthChecks:0:Name=Readiness checks
+      - HealthChecksUI:HealthChecks:0:Uri=http://leaderboardwebapi:8080/health/ready
+      - HealthChecksUI:HealthChecks:1:Name=Liveliness checks
+      - HealthChecksUI:HealthChecks:1:Uri=http://leaderboardwebapi:8080/health/lively
+    ports:
+      - 5000:80
+    networks:
+      - backend
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
