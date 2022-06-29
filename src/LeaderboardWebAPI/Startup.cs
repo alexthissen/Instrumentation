@@ -63,9 +63,10 @@ namespace LeaderboardWebAPI
                 })
                 .AddXmlSerializerFormatters();
 
+            services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "LeaderboardWebAPI", Version = "v1" });
+                c.SwaggerDoc("v1.0", new OpenApiInfo { Title = "Retro Videogames Leaderboard WebAPI", Version = "v1.0" });
             });
         }
 
@@ -120,8 +121,13 @@ namespace LeaderboardWebAPI
                 DbInitializer.Initialize(context).Wait();
                 app.UseStatusCodePages();
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "LeaderboardWebAPI v1"));                
+                app.UseSwagger(options => {
+                    options.RouteTemplate = "openapi/{documentName}/openapi.json";
+                });
+                app.UseSwaggerUI(c => {
+                    c.SwaggerEndpoint("/openapi/v1.0/openapi.json", "LeaderboardWebAPI v1.0");
+                    c.RoutePrefix = "openapi";
+                });
             }
 
             //app.UseHttpsRedirection();

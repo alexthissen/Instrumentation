@@ -5,7 +5,7 @@
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>e0e9eb96-7227-41f1-a90c-85de49492a4b</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
+    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/openapi</DockerServiceUrl>
     <DockerServiceName>leaderboardwebapi</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>

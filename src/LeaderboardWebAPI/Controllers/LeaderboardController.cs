@@ -17,8 +17,8 @@ namespace LeaderboardWebAPI.Controllers
     }
 
     [ApiController]
+    [Route("api/v1.0/[controller]")]
     [Produces("application/xml", "application/json")]
-    [Route("api/[controller]")]
     public class LeaderboardController : ControllerBase
     {
         public LeaderboardContext context { get; }

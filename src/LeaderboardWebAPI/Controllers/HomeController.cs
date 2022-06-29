@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace LeaderboardWebAPI.Controllers
 {
-    //[SwaggerIgnore]
     public class HomeController : Controller
     {
         public IActionResult Index()
