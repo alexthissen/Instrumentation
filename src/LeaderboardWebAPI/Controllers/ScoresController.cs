@@ -12,7 +12,10 @@ using System.Threading.Tasks;
 
 namespace LeaderboardWebAPI.Controllers
 {
-    public class ScoresController : Controller
+    [ApiController]
+    [Route("api/v1.0/[controller]")]
+    [Produces("application/xml", "application/json")]
+    public class ScoresController : ControllerBase
     {
         private readonly LeaderboardContext context;
         private readonly TelemetryClient client;
@@ -33,7 +36,7 @@ namespace LeaderboardWebAPI.Controllers
         [HttpPost("{nickname}/{game}")]
         public async Task PostScore(string nickname, string game, [FromBody] int points)
         {
-            Activity activity = new Activity("Forecast");
+            Activity activity = new Activity("GotNewHighScore");
             activity.SetStartTime(DateTime.Now);
             activity.AddTag("Gamer", nickname);
 

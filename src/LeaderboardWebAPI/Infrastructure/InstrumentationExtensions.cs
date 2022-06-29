@@ -16,6 +16,7 @@ namespace LeaderboardWebApi.Infrastructure
         {
             if (app.Environment.IsDevelopment())
             {
+                app.MapHealthChecks("/ping", new HealthCheckOptions() { Predicate = _ => false });
                 app.MapHealthChecks("/health",
                     new HealthCheckOptions()
                     {
@@ -52,6 +53,7 @@ namespace LeaderboardWebApi.Infrastructure
             {
                 options.Delay = TimeSpan.FromSeconds(10);
             });
+
             if (builder.Environment.IsDevelopment())
             {
                 builder.Services.AddHealthChecksUI(setup => {

@@ -9,7 +9,7 @@ namespace GamingWebApp.Proxy
     [Headers("User-Agent: Leaderboard WebAPI Client 1.0")]
     public interface ILeaderboardClient
     {
-        [Get("/api/leaderboard")]
+        [Get("/api/v1.0/leaderboard")]
         Task<IEnumerable<HighScore>> GetHighScores(int limit = 10);
     }
 
