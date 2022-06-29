@@ -7,10 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace LeaderboardWebAPI
 {
@@ -53,7 +50,7 @@ namespace LeaderboardWebAPI
                         });
                     builder.AddSeq("http://seq:5341");
                     builder.AddSimpleConsole(options => {
-                        // New in .NET 5
+                        // New since .NET 5
                         options.ColorBehavior = LoggerColorBehavior.Disabled;
                         options.IncludeScopes = true;
                     });

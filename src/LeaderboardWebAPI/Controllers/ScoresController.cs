@@ -23,6 +23,13 @@ namespace LeaderboardWebAPI.Controllers
             this.client = client;
         }
 
+        [HttpGet("{game}")]
+        public async Task<IEnumerable<Score>> Get(string game)
+        {
+            var scores = context.Scores.Where(s => s.Game == game).Include(s => s.Gamer);
+            return await scores.ToListAsync().ConfigureAwait(false);
+        }
+
         [HttpPost("{nickname}/{game}")]
         public async Task PostScore(string nickname, string game, [FromBody] int points)
         {
