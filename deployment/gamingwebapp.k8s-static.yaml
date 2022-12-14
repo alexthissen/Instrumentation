@@ -59,7 +59,8 @@ spec:
       containers:
       - name: gamingwebapp
         terminationMessagePath: "/tmp/gamingwebapp-log"
-        image: yourregistry.azurecr.io/gamingwebapp:latest
+        image: local/gamingwebapp:latest
+        imagePullPolicy: Never
         env:
         - name: ASPNETCORE_ENVIRONMENT
           value: Development
@@ -100,8 +101,8 @@ spec:
       containers:
       - name: leaderboardwebapi
         terminationMessagePath: "/tmp/leaderboardwebapi-log"
-        image: yourregistry.azurecr.io/leaderboardwebapi:health
-        imagePullPolicy: Always
+        image: local/leaderboardwebapi:health
+        imagePullPolicy: Never
         readinessProbe:
           httpGet:
             path: /health/ready

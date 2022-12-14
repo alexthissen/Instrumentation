@@ -44,6 +44,7 @@ namespace LeaderboardWebAPI.Controllers
             logger?.LogError("Retrieving score list with a limit of {SearchLimit}.", limit);
             logger?.LogWarning("Retrieving score list with a limit of {SearchLimit}.", limit);
             logger?.LogInformation("Retrieving score list with a limit of {SearchLimit}.", limit);
+
             AnalyzeLimit(limit);
 
             var scores = context.Scores
