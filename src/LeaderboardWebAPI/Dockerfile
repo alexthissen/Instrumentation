@@ -12,11 +12,15 @@ RUN dotnet restore "src/LeaderboardWebAPI/LeaderboardWebAPI.csproj"
 COPY . .
 WORKDIR "/src/src/LeaderboardWebAPI"
 RUN dotnet build "LeaderboardWebAPI.csproj" -c Release -o /app/build
+RUN dotnet tool install --tool-path /tools dotnet-trace \
+ && dotnet tool install --tool-path /tools dotnet-counters
 
 FROM build AS publish
 RUN dotnet publish "LeaderboardWebAPI.csproj" -c Release -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
+WORKDIR /tools
+COPY --from=build /tools .
 WORKDIR /app
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "LeaderboardWebAPI.dll"]
