@@ -13,10 +13,10 @@ namespace GamingWebApp.Proxy
         Task<IEnumerable<HighScore>> GetHighScores(int limit = 10);
     }
 
-    public class HighScore
+    public record HighScore
     {
-        public string Game { get; set; }
-        public string Nickname { get; set; }
-        public int Points { get; set; }
+        public string Game { get; init; }
+        public string Nickname { get; init; }
+        public int Points { get; init; }
     }
 }

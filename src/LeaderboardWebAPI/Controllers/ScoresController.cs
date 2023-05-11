@@ -67,8 +67,12 @@ namespace LeaderboardWebAPI.Controllers
                     score.Points = points;
                 }
 
+                // Application Insights tracing and metrics
                 client.TrackEvent("NewHighScore");
                 client.GetMetric("HighScore").TrackValue(points);
+
+                // .NET Diagnostics metrics
+                RetroGamingEventSource.Log.NewHighScore(points);
 
                 await context.SaveChangesAsync().ConfigureAwait(false);
             }

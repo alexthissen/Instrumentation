@@ -68,6 +68,16 @@ services:
     networks:
       - backend
 
+  dotnetmonitor:
+    image: mcr.microsoft.com/dotnet/monitor:7
+    ports: 
+      - 52323:52323
+    environment:
+      - DOTNETMONITOR_Authentication:MonitorApiKey:Subject=a65223c0-4066-4594-ae46-f3a1fad83a37
+      - DOTNETMONITOR_Authentication:MonitorApiKey:PublicKey=eyJBZGRpdGlvbmFsRGF0YSI6e30sIkNydiI6IlAtMzg0IiwiS2V5T3BzIjpbXSwiS3R5IjoiRUMiLCJYIjoiZDk0SFNXQXdrbmxPZTNBWWJhRTVfVmxJTFd5QVNhbDhvQkV2bHM2YTZucVVvcUVCQ04zZVhUNmtDb216S0syRyIsIlg1YyI6W10sIlkiOiJmb3RySFh6Sml2ZGN2RUVoY24zVlZtVUt4Q1ZrVk4wSnVxaUVmRFQxblhEN3VhTTZMcmRDUEVXRzB4dDBHYW1FIiwiS2V5U2l6ZSI6Mzg0LCJIYXNQcml2YXRlS2V5IjpmYWxzZSwiQ3J5cHRvUHJvdmlkZXJGYWN0b3J5Ijp7IkNyeXB0b1Byb3ZpZGVyQ2FjaGUiOnt9LCJDYWNoZVNpZ25hdHVyZVByb3ZpZGVycyI6dHJ1ZSwiU2lnbmF0dXJlUHJvdmlkZXJPYmplY3RQb29sQ2FjaGVTaXplIjoyNH19
+    networks:
+      - backend
+
 networks:
   frontend:
     driver: bridge

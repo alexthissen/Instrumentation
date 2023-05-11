@@ -31,17 +31,18 @@ IHealthChecksBuilder healthChecks = builder.Services.AddHealthChecks();
 if (!String.IsNullOrEmpty(builder.Configuration["KeyVaultUri"]))
 {
     Uri keyVaultUri = new Uri(builder.Configuration["KeyVaultUri"]);
-    ClientSecretCredential credential = new (
+    ClientSecretCredential credential = new(
         builder.Configuration["KeyVaultTenantID"],
         builder.Configuration["KeyVaultClientID"],
         builder.Configuration["KeyVaultClientSecret"]);
-        // For managed identities use:
-        //   new DefaultAzureCredential()
+    // For managed identities use:
+    //   new DefaultAzureCredential()
     var secretClient = new SecretClient(keyVaultUri, credential);
     builder.Configuration.AddAzureKeyVault(secretClient, new KeyVaultSecretManager());
 
     healthChecks?.AddAzureKeyVault(keyVaultUri, credential,
-        options => {
+        options =>
+        {
             options
             .AddSecret("ApplicationInsights--InstrumentationKey")
             .AddKey("RetroKey");
@@ -66,10 +67,12 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 healthChecks?.AddDbContextCheck<LeaderboardContext>("database", tags: new[] { "ready" });
 
 // Add log providers
-builder.Logging.AddApplicationInsights(config => { 
-        config.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
-    },
-    options => {
+builder.Logging.AddApplicationInsights(config =>
+{
+    config.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
+},
+    options =>
+    {
         options.IncludeScopes = true;
         options.TrackExceptionsAsExceptionTelemetry = true;
     });
