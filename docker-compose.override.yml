@@ -6,8 +6,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443;http://+:80;http://+:8080
       - ASPNETCORE_MANAGEMENTPORT=8080
-      - ConnectionStrings__LeaderboardContext=Server=sql.retrogaming.internal;Database=Leaderboard;User Id=sa;Password=Pass@word;Trusted_Connection=False
-      - KeyVaultName=https://yourkeyvault.vault.azure.net/
+      - ConnectionStrings__LeaderboardContext=Server=sql.retrogaming.internal;Database=Leaderboard;User Id=sa;Password=Pass@word;Trusted_Connection=False;TrustServerCertificate=true
+      - KeyVaultUri=https://conferencedemoskeyvault.vault.azure.net/
     ports:
       - "4972:80"
       - "44369:443"
@@ -35,7 +35,7 @@ services:
       - frontend
 
   sql.data:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
       - SA_PASSWORD=Pass@word
       - MSSQL_PID=Developer

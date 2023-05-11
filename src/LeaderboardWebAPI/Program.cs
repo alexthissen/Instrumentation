@@ -17,6 +17,7 @@ using Microsoft.Net.Http.Headers;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using System;
+using System.Diagnostics.Contracts;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -27,9 +28,9 @@ builder.Configuration.AddJsonFile("secrets/appsettings.secrets.json", optional: 
 IHealthChecksBuilder healthChecks = builder.Services.AddHealthChecks();
 
 // Add configuration provider for Azure Key Vault
-if (!String.IsNullOrEmpty(builder.Configuration["KeyVaultName"]))
+if (!String.IsNullOrEmpty(builder.Configuration["KeyVaultUri"]))
 {
-    Uri keyVaultUri = new Uri(builder.Configuration["KeyVaultName"]);
+    Uri keyVaultUri = new Uri(builder.Configuration["KeyVaultUri"]);
     ClientSecretCredential credential = new (
         builder.Configuration["KeyVaultTenantID"],
         builder.Configuration["KeyVaultClientID"],
@@ -39,7 +40,7 @@ if (!String.IsNullOrEmpty(builder.Configuration["KeyVaultName"]))
     var secretClient = new SecretClient(keyVaultUri, credential);
     builder.Configuration.AddAzureKeyVault(secretClient, new KeyVaultSecretManager());
 
-    healthChecks.AddAzureKeyVault(keyVaultUri, credential,
+    healthChecks?.AddAzureKeyVault(keyVaultUri, credential,
         options => {
             options
             .AddSecret("ApplicationInsights--InstrumentationKey")
@@ -62,13 +63,13 @@ builder.Services.AddDbContext<LeaderboardContext>(options =>
     });
 });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-healthChecks.AddDbContextCheck<LeaderboardContext>("database", tags: new[] { "ready" });
+healthChecks?.AddDbContextCheck<LeaderboardContext>("database", tags: new[] { "ready" });
 
 // Add log providers
-builder.Logging.AddApplicationInsights(
-    builder.Configuration["ApplicationInsights:InstrumentationKey"],
-    options =>
-    {
+builder.Logging.AddApplicationInsights(config => { 
+        config.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
+    },
+    options => {
         options.IncludeScopes = true;
         options.TrackExceptionsAsExceptionTelemetry = true;
     });

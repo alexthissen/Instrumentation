@@ -45,20 +45,21 @@ namespace LeaderboardWebApi.Infrastructure
 
         public static void AddInstrumentation(this WebApplicationBuilder builder)
         {
-            string key = builder.Configuration["ApplicationInsights:InstrumentationKey"];
+            string connection = builder.Configuration["ApplicationInsights:ConnectionString"];
 
             IHealthChecksBuilder health = builder.Services.AddHealthChecks();
-            health.AddApplicationInsightsPublisher(key);
+            health.AddApplicationInsightsPublisher(connectionString: connection);
             builder.Services.Configure<HealthCheckPublisherOptions>(options =>
             {
-                options.Delay = TimeSpan.FromSeconds(10);
+                options.Delay = TimeSpan.FromSeconds(60);
             });
 
             if (builder.Environment.IsDevelopment())
             {
-                builder.Services.AddHealthChecksUI(setup => {
+                builder.Services.AddHealthChecksUI(setup =>
+                {
                     setup.AddHealthCheckEndpoint("Leaderboard Web API Health checks", "http://localhost/health");
-                    setup.SetEvaluationTimeInSeconds(5);
+                    setup.SetEvaluationTimeInSeconds(60);
                 })
                 .AddInMemoryStorage();
             }
@@ -67,7 +68,7 @@ namespace LeaderboardWebApi.Infrastructure
             builder.Services.AddApplicationInsightsTelemetry(options =>
             {
                 options.DeveloperMode = builder.Environment.IsDevelopment();
-                options.InstrumentationKey = key;
+                options.ConnectionString = connection;
             });
         }
     }
